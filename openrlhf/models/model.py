@@ -182,8 +182,21 @@ def _get_reward_model(base_pretrained_model, base_llm_model, value_head_prefix="
 
             # load mean/std from config.json
             if hasattr(config, "mean"):
-                self.mean[0] = config.mean
-                self.std[0] = config.std
+                if type(config.mean) == list:
+                    import math
+                    self.mean[0] = config.mean[0]
+                    if hasattr(config, "var"):
+                        self.std[0] = math.sqrt(config.var[0])
+                    else:
+                        self.std[0] = config.std[0]
+                else:
+                    import math
+                    self.mean[0] = config.mean
+                    if hasattr(config, "var"):
+                        self.std[0] = math.sqrt(config.var[0])
+                    else:
+                        self.std[0] = config.std[0]
+
 
         def forward(
             self,
@@ -246,8 +259,20 @@ def _get_critic_model(base_pretrained_model, base_llm_model, value_head_prefix="
 
             # load mean/std from config.json
             if hasattr(config, "mean"):
-                self.mean[0] = config.mean
-                self.std[0] = config.std
+                if type(config.mean) == list:
+                    import math
+                    self.mean[0] = config.mean[0]
+                    if hasattr(config, "var"):
+                        self.std[0] = math.sqrt(config.var[0])
+                    else:
+                        self.std[0] = config.std[0]
+                else:
+                    import math
+                    self.mean[0] = config.mean
+                    if hasattr(config, "var"):
+                        self.std[0] = math.sqrt(config.var[0])
+                    else:
+                        self.std[0] = config.std[0]
 
         def forward(
             self,

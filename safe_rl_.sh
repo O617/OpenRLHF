@@ -1,0 +1,47 @@
+set -x
+
+python3 -m openrlhf.cli.train_ppo_ray \
+   --ref_num_nodes 1 \
+   --ref_num_gpus_per_node 8 \
+   --reward_num_nodes 1 \
+   --reward_num_gpus_per_node 8 \
+   --critic_num_nodes 1 \
+   --critic_num_gpus_per_node 8 \
+   --actor_num_nodes 1 \
+   --actor_num_gpus_per_node 8 \
+   --vllm_num_engines 4 \
+   --vllm_tensor_parallel_size 2 \
+   --colocate_all_models \
+   --vllm_gpu_memory_utilization 0.5 \
+   --pretrain /mnt/hdc/xh/model/Qwen-1.5B \
+   --reward_pretrain /mnt/hdc/xh/model/beaver-7b-unified-reward \
+   --save_path /mnt/hdc/xh/model/ckpt/qwen1.5b \
+   --ckpt_path /mnt/hdc/xh/model/ckpt/ \
+   --save_hf_ckpt \
+   --micro_train_batch_size 4 \
+   --train_batch_size 128 \
+   --micro_rollout_batch_size 8 \
+   --rollout_batch_size 1024 \
+   --n_samples_per_prompt 1 \
+   --max_epochs 1 \
+   --prompt_max_len 1024 \
+   --max_samples 100000 \
+   --generate_max_len 1024 \
+   --zero_stage 3 \
+   --bf16 \
+   --actor_learning_rate 5e-7 \
+   --critic_learning_rate 9e-6 \
+   --init_kl_coef 0.01 \
+   --prompt_data /mnt/hdc/xh/SafetyBench/AdvBenchfull_safety.json \
+   --input_key prompt \
+   --apply_chat_template \
+   --normalize_reward \
+   --gradient_checkpointing \
+   --packing_samples \
+   --vllm_sync_backend nccl \
+   --enforce_eager \
+   --vllm_enable_sleep \
+   --deepspeed_enable_sleep \
+   --use_dynamic_batch \
+   --train_max_tokens_per_gpu 4096
+
