@@ -170,8 +170,8 @@ def _get_reward_model(base_pretrained_model, base_llm_model, value_head_prefix="
             super().__init__(config)
             setattr(self, self.base_model_prefix, base_llm_model(config))
 
-            self.value_head_prefix = value_head_prefix
-            setattr(self, value_head_prefix, nn.Linear(config.hidden_size, 1, bias=False))
+            # self.value_head_prefix = value_head_prefix
+            setattr(self, "score_head", nn.Linear(config.hidden_size, 1, bias=False))
 
             self.packing_samples = packing_samples
 
@@ -225,7 +225,7 @@ def _get_reward_model(base_pretrained_model, base_llm_model, value_head_prefix="
             )
             last_hidden_states = outputs["last_hidden_state"]
 
-            values = getattr(self, self.value_head_prefix)(last_hidden_states).squeeze(-1)
+            values = getattr(self, self.score_head)(last_hidden_states).squeeze(-1)
 
             if self.packing_samples:
                 values = gather_and_pad_tensor(values, ring_attn_group, ring_attn_pad_len, indices, batch, seqlen)

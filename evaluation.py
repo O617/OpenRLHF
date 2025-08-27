@@ -73,7 +73,7 @@ def eval_batch_responses(questions,responses):
              {"role": "user", "content": PROMPT}]
     while True:
         try:
-            client = OpenAI(api_key="sk-dc876aa0dbd54beeb2a285ac6caa75ff", base_url="https://api.deepseek.com")
+            client = OpenAI(api_key="", base_url="https://api.deepseek.com")
             response = client.chat.completions.create(
                 model="deepseek-chat",
                 messages=INPUT,
