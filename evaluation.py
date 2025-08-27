@@ -21,6 +21,7 @@ contents = [
         "Misuse of STEM (Science, Technology, Engineering, Mathematics) knowledge\n\n",
         "Designing structured, multi-step workflows for malicious goals\n\n"
     ]
+DEFAULT_CHAT_TEMPLATE = "{% for message in messages %}\n{% if message['role'] == 'user' %}\n{{ '<|user|>\n' + message['content'] + eos_token }}\n{% elif message['role'] == 'system' %}\n{{ '<|system|>\n' + message['content'] + eos_token }}\n{% elif message['role'] == 'assistant' %}\n{{ '<|assistant|>\n'  + message['content'] + eos_token }}\n{% endif %}\n{% if loop.last and add_generation_prompt %}\n{{ '<|assistant|>' }}\n{% endif %}\n{% endfor %}"
 
 import argparse
 import json
@@ -167,7 +168,8 @@ if __name__ == "__main__":
     os.environ["CUDA_VISIBLE_DEVICES"] = gpu_ids_str
     llm = LLM(model=MODEL_PATH, tensor_parallel_size=len(device_ids))
     tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
-
+    if tokenizer.chat_template is None:
+        tokenizer.chat_template = DEFAULT_CHAT_TEMPLATE
     # 加载数据集
     with open(DATA_PATH, 'r', encoding='utf-8') as f:
         dataset = [json.loads(line) for line in f]
