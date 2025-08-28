@@ -225,7 +225,7 @@ def _get_reward_model(base_pretrained_model, base_llm_model, value_head_prefix="
             )
             last_hidden_states = outputs["last_hidden_state"]
 
-            values = getattr(self, self.score_head)(last_hidden_states).squeeze(-1)
+            values = getattr(self, "score_head")(last_hidden_states).squeeze(-1)
 
             if self.packing_samples:
                 values = gather_and_pad_tensor(values, ring_attn_group, ring_attn_pad_len, indices, batch, seqlen)

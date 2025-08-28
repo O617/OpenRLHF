@@ -179,7 +179,7 @@ def train(args):
 
     # train actor and critic model
     ray.get(ppo_trainer.fit.remote())
-
+    # print("<<<<<<<<<<>>>>>>>>>>")
     # save model
     ray.get(actor_model.async_save_model())
 
